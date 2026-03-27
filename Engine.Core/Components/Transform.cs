@@ -1,10 +1,15 @@
 ﻿using System.Numerics;
+using Engine.Core.Components.Base;
+using ComponentType = System.UInt32;
 
 namespace Engine.Core.Components;
 
-public class Transform : Component
+public struct Transform : IComponent
 {
+    public ComponentType ComponentType;
+    public const UInt32 MaxComponents = 128;
+    
     public Vector2 Position;
     public float Rotation;
-    public Vector2 Scale = Vector2.One;
+    public Vector2 Scale;
 }

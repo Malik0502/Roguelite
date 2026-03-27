@@ -8,4 +8,9 @@ public class Scene
     {
         _entities.Add(entity);
     }
+
+    public List<Entity> GetEntities()
+    {
+        return _entities;
+    }
 }
