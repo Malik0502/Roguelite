@@ -1,0 +1,29 @@
+{
+  "Player": {
+    "Health": 200,
+    "Damage": 10,
+    "Speed": 1.5,
+    "Components": [
+      "Health",
+      "PlayerMovement"
+    ]
+  },
+  "Melee": {
+    "Health": 100,
+    "Damage": 25,
+    "Speed": 2,
+    "Components": [
+      "Health",
+      "MeleeMovement"
+    ]
+  },
+  "Range": {
+    "Health": 50,
+    "Damage": 15,
+    "Speed": 3.5,
+    "Components": [
+      "Health",
+      "RangeMovement"
+    ]
+  }
+}
