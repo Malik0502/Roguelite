@@ -4,10 +4,20 @@ namespace Engine.Core.Manager.ComponentM;
 
 public class ComponentManager
 {
-    // bitmask / archetype implementation todo
+    private readonly Dictionary<Type, object> _pools = new();
 
-    public void RegisterComponent<T>(T component) where T : Component
+    // Gets an existing pool or creates a pool from given type and returns it
+    public ComponentPool<T> GetPool<T>() where T : struct, IComponent
     {
-            
+        if (_pools.TryGetValue(typeof(T), out var pool)) 
+            return (ComponentPool<T>)pool;
+        
+        pool = new ComponentPool<T>();
+        _pools[typeof(T)] = pool;
+
+        return (ComponentPool<T>)pool;
     }
+
+    public void RemovePool<T>(ComponentPool<T> componentPool) where T : struct, IComponent 
+        => _pools.Remove(typeof(T));
 }

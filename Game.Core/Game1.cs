@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Engine.Core;
+using Engine.Core.Manager.ComponentM;
 using Engine.Core.Manager.EntityM;
 
 namespace Game.Core

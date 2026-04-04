@@ -7,5 +7,5 @@ public class EntityConfig
     public int Health;
     public int Damage;
     public float Speed;
-    public Component[] Components = [];
+    public IComponent[] Components = [];
 }
