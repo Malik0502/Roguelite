@@ -9,7 +9,7 @@ public static class EntityBitmaskExtension
     /// </summary>
     /// <param name="entity">The entity to which the component type will be added. Cannot be null.</param>
     /// <param name="component">The component type to add to the entity.</param>
-    public static void Add(this Entity entity, ComponentType component)
+    public static void Add(this ref Entity entity, ComponentType component)
     {
         entity.Mask |= component;
     }
@@ -30,7 +30,7 @@ public static class EntityBitmaskExtension
     /// </summary>
     /// <param name="entity">The entity from which the component type will be removed. Must not be null.</param>
     /// <param name="component">The component type to remove from the entity.</param>
-    public static void Remove(this Entity entity, ComponentType component)
+    public static void Remove(this ref Entity entity, ComponentType component)
     {
         entity.Mask &= ~component;
     }

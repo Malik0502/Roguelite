@@ -1,12 +1,16 @@
 ﻿using Engine.Core.Config;
-using Engine.Core.Enums;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Engine.Core;
+using Engine.Core.Components;
+using Engine.Core.Enums;
 using Engine.Core.Manager.ComponentM;
 using Engine.Core.Manager.EntityM;
+using Engine.Core.Manager.SceneM;
+using Engine.Core.Manager.SystemM;
+using Game.Core.Systems;
 
 namespace Game.Core
 {
@@ -14,10 +18,18 @@ namespace Game.Core
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private Texture2D _playerTexture;
         private Entity _player;
         private ServiceProvider _serviceProvider;
         private EntityFactory _entityFactory;
+        private ComponentManager _componentManager;
+        private SystemManager _systemManager;
+
+        #region Pools
+
+        private ComponentPool<Sprite> _spritePool;
+        private ComponentPool<Transform> _transformPool;
+
+        #endregion
 
         public Game1()
         {
@@ -32,8 +44,13 @@ namespace Game.Core
         {
             _serviceProvider = BuildServiceProvider();
             _entityFactory = _serviceProvider.GetService<EntityFactory>();
+            _componentManager = _serviceProvider.GetService<ComponentManager>();
+            _systemManager = _serviceProvider.GetService<SystemManager>();
 
-            _player = _entityFactory.Create(EntityType.Player);
+            RegisterComponentPool();
+            RegisterSystems();
+
+            CreatePlayer();
 
             base.Initialize();
         }
@@ -41,12 +58,15 @@ namespace Game.Core
         protected override void LoadContent()
         {
             _spriteBatch = _serviceProvider.GetService<SpriteBatch>();
-            _playerTexture = Content.Load<Texture2D>("Player/BlackHead");
+            _spritePool.Get(_player.Id).Texture = Content.Load<Texture2D>("Player/BlackHead");
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _systemManager.UpdateAll(deltaTime);
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             // TODO: Add your update logic here
@@ -59,7 +79,7 @@ namespace Game.Core
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _spriteBatch.Begin();
-            _spriteBatch.Draw(_playerTexture, Vector2.Zero, Color.White);
+            _spriteBatch.Draw(_spritePool.Get(_player.Id).Texture, _transformPool.Get(_player.Id).Position, Color.White);
             _spriteBatch.End();
 
             base.Draw(gameTime);
@@ -82,8 +102,34 @@ namespace Game.Core
             serviceCollection.AddSingleton <EntityFactory>();
             serviceCollection.AddSingleton<EntityManager>();
             serviceCollection.AddSingleton<ConfigDeserializer>();
+            serviceCollection.AddSingleton<SceneManager>();
+            serviceCollection.AddSingleton<ComponentManager>();
+            serviceCollection.AddSingleton<SystemManager>();
+            serviceCollection.AddSingleton<PlayerMovementSystem>();
 
             return serviceCollection;
+        }
+
+        private void RegisterComponentPool()
+        {
+            _spritePool = _componentManager.GetPool<Sprite>();
+            _transformPool = _componentManager.GetPool<Transform>();
+        }
+
+        private void RegisterSystems()
+        {
+            _systemManager.AddSystem(_serviceProvider.GetService<PlayerMovementSystem>());
+        }
+
+        private void CreatePlayer()
+        {
+            _player = _entityFactory.Create(EntityType.Player);
+
+            _spritePool.Add(_player.Id, new Sprite());
+            _player.Add(ComponentType.Sprite);
+
+            _transformPool.Add(_player.Id, new Transform() { Position = new Vector2(100, 100) });
+            _player.Add(ComponentType.Transform);
         }
     }
 }

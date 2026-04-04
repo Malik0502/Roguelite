@@ -1,4 +1,5 @@
-﻿using Engine.Core.Enums;
+﻿
+using Engine.Core.Enums;
 
 namespace Engine.Core
 {

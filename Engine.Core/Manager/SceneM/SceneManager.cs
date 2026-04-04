@@ -2,15 +2,20 @@
 
 public class SceneManager
 {
-    private static Scene? CurrentScene;
+    private static Scene? _currentScene;
 
-    public static void LoadScene(Scene scene)
+    public SceneManager()
     {
-        CurrentScene = scene;
+        _currentScene = new Scene();
     }
 
-    public static Scene? GetCurrentCene()
+    public void LoadScene(Scene scene)
     {
-        return CurrentScene;
+        _currentScene = scene;
+    }
+
+    public Scene GetCurrentCene()
+    {
+        return _currentScene;
     }
 }

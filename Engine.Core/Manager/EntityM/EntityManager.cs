@@ -23,6 +23,8 @@ public class EntityManager
             Id = _entityId
         };
         _entityId++;
+        
+        _sceneManager.GetCurrentCene().AddEntity(entity);
 
         AddComponentsToEntity(config);
 
