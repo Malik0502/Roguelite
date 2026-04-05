@@ -125,11 +125,10 @@ namespace Game.Core
         {
             _player = _entityFactory.Create(EntityType.Player);
 
-            _spritePool.Add(_player.Id, new Sprite());
-            _player.Add(ComponentType.Sprite);
-
             _transformPool.Add(_player.Id, new Transform() { Position = new Vector2(100, 100) });
-            _player.Add(ComponentType.Transform);
+
+            _spritePool.Add(_player.Id, new Sprite());
+
         }
     }
 }
