@@ -6,7 +6,7 @@ using Engine.Core.Manager.SystemM;
 using Engine.Core.Constants;
 using Microsoft.Xna.Framework.Input;
 
-namespace Game.Core.Systems;
+namespace Game.Core.Systems.Player;
 
 public class PlayerMovementSystem : ISystem
 {

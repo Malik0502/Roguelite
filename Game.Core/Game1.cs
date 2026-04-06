@@ -7,13 +7,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Engine.Core;
 using Engine.Core.Components;
 using Engine.Core.Components.Tags;
-using Engine.Core.Constants;
 using Engine.Core.Enums;
 using Engine.Core.Manager.ComponentM;
 using Engine.Core.Manager.EntityM;
 using Engine.Core.Manager.SceneM;
 using Engine.Core.Manager.SystemM;
-using Game.Core.Systems;
+using Game.Core.Systems.Player;
 
 namespace Game.Core
 {
@@ -90,6 +89,17 @@ namespace Game.Core
             base.Draw(gameTime);
         }
 
+        private void CreatePlayer()
+        {
+            _player = _entityFactory.Create(EntityType.Player);
+
+            _transformPool.Add(_player.Id, new Transform() { Position = new Vector2(100, 100) });
+            _spritePool.Add(_player.Id, new Sprite());
+            _playerPool.Add(_player.Id, new PlayerTag());
+        }
+
+        #region Registry
+
         private ServiceProvider BuildServiceProvider()
         {
             var serviceCollection = RegisterServices();
@@ -104,7 +114,7 @@ namespace Game.Core
             serviceCollection.AddSingleton(GraphicsDevice);
             serviceCollection.AddSingleton<GraphicsDeviceManager>();
             serviceCollection.AddSingleton<SpriteBatch>();
-            serviceCollection.AddSingleton <EntityFactory>();
+            serviceCollection.AddSingleton<EntityFactory>();
             serviceCollection.AddSingleton<EntityManager>();
             serviceCollection.AddSingleton<ConfigDeserializer>();
             serviceCollection.AddSingleton<SceneManager>();
@@ -127,13 +137,6 @@ namespace Game.Core
             _systemManager.AddSystem(_serviceProvider.GetService<PlayerMovementSystem>());
         }
 
-        private void CreatePlayer()
-        {
-            _player = _entityFactory.Create(EntityType.Player);
-
-            _transformPool.Add(_player.Id, new Transform() { Position = new Vector2(100, 100) });
-            _spritePool.Add(_player.Id, new Sprite());
-            _playerPool.Add(_player.Id, new PlayerTag());
-        }
+        #endregion
     }
 }
