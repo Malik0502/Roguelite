@@ -1,10 +1,13 @@
-﻿using Engine.Core.Config;
+﻿using System.Diagnostics;
+using Engine.Core.Config;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Engine.Core;
 using Engine.Core.Components;
+using Engine.Core.Components.Tags;
+using Engine.Core.Constants;
 using Engine.Core.Enums;
 using Engine.Core.Manager.ComponentM;
 using Engine.Core.Manager.EntityM;
@@ -18,16 +21,18 @@ namespace Game.Core
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private Entity _player;
         private ServiceProvider _serviceProvider;
         private EntityFactory _entityFactory;
         private ComponentManager _componentManager;
         private SystemManager _systemManager;
 
+        private Entity _player;
+
         #region Pools
 
         private ComponentPool<Sprite> _spritePool;
         private ComponentPool<Transform> _transformPool;
+        private ComponentPool<PlayerTag> _playerPool;
 
         #endregion
 
@@ -66,10 +71,10 @@ namespace Game.Core
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             _systemManager.UpdateAll(deltaTime);
 
+            Debug.WriteLine(_transformPool.Get(_player.Id).Position);
+
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            // TODO: Add your update logic here
 
             base.Update(gameTime);
         }
@@ -114,6 +119,7 @@ namespace Game.Core
         {
             _spritePool = _componentManager.GetPool<Sprite>();
             _transformPool = _componentManager.GetPool<Transform>();
+            _playerPool = _componentManager.GetPool<PlayerTag>();
         }
 
         private void RegisterSystems()
@@ -126,9 +132,8 @@ namespace Game.Core
             _player = _entityFactory.Create(EntityType.Player);
 
             _transformPool.Add(_player.Id, new Transform() { Position = new Vector2(100, 100) });
-
             _spritePool.Add(_player.Id, new Sprite());
-
+            _playerPool.Add(_player.Id, new PlayerTag());
         }
     }
 }
