@@ -24,7 +24,7 @@ public class EntityManager
         };
         _entityId++;
         
-        _sceneManager.GetCurrentCene().AddEntity(entity);
+        _sceneManager.GetCurrentScene().AddEntity(entity);
 
         AddComponentsToEntity(config);
 

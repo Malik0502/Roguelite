@@ -14,7 +14,7 @@ public class SceneManager
         _currentScene = scene;
     }
 
-    public Scene GetCurrentCene()
+    public Scene GetCurrentScene()
     {
         return _currentScene;
     }
