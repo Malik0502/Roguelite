@@ -19,4 +19,12 @@ public class SystemManager
         foreach (var system in _systems.Values)
             system.Update(deltaTime);
     }
+
+    public void DrawAll()
+    {
+        foreach (var drawableSystem in _systems.Values.OfType<IDrawableSystem>())
+        {
+            drawableSystem.Draw();
+        }
+    }
 }

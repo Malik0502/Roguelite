@@ -16,6 +16,6 @@ public class SceneManager
 
     public Scene GetCurrentScene()
     {
-        return _currentScene;
+        return _currentScene!;
     }
 }

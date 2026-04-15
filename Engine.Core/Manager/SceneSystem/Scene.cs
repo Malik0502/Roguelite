@@ -4,9 +4,9 @@ public class Scene
 {
     // For Sake of simplicity no Dictionary for faster accessing specific entities
     // Add a Dictionary, should the performance drop significantly
-    private List<Core.Entity> _entities = [];
+    private List<Entity> _entities = [];
 
-    public void AddEntity(Core.Entity entity) 
+    public void AddEntity(Entity entity) 
         => _entities.Add(entity);
 
     public Entity GetEntity(int entityId) 

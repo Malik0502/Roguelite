@@ -4,7 +4,7 @@ namespace Engine.Core.Manager.ComponentSystem;
 
 public class ComponentManager
 {
-    public readonly Dictionary<Type, object> _pools = new();
+    private readonly Dictionary<Type, object> _pools = new();
 
     // Gets an existing pool or creates a pool from given type and returns it
     public ComponentPool<T> GetPool<T>() where T : struct, IComponent
