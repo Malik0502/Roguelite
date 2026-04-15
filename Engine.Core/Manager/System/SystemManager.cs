@@ -1,4 +1,4 @@
-﻿namespace Engine.Core.Manager.SystemM;
+﻿namespace Engine.Core.Manager.System;
 
 public class SystemManager
 {

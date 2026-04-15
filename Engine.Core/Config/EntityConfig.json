@@ -5,7 +5,9 @@
     "Speed": 1.5,
     "Components": [
       "Health",
-      "PlayerMovement"
+      "Transform",
+      "Sprite",
+      "PlayerTag"
     ]
   },
   "Melee": {
@@ -14,7 +16,9 @@
     "Speed": 2,
     "Components": [
       "Health",
-      "MeleeMovement"
+      "Transform",
+      "Sprite",
+      "MeleeTag"
     ]
   },
   "Range": {
@@ -23,7 +27,9 @@
     "Speed": 3.5,
     "Components": [
       "Health",
-      "RangeMovement"
+      "Transform",
+      "Sprite",
+      "RangeTag"
     ]
   }
 }

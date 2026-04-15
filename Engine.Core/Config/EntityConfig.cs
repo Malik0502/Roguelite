@@ -1,11 +1,9 @@
-﻿using Engine.Core.Components.Base;
-
-namespace Engine.Core.Config;
+﻿namespace Engine.Core.Config;
 
 public class EntityConfig
 {
-    public int Health;
-    public int Damage;
-    public float Speed;
-    public IComponent[] Components = [];
+    public int Health { get; set; }
+    public int Damage { get; set; }
+    public float Speed { get; set; }
+    public string[] Components { get; set; } = [];
 }

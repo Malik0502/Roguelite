@@ -1,10 +1,10 @@
 ﻿using Engine.Core.Components.Base;
 
-namespace Engine.Core.Manager.ComponentM;
+namespace Engine.Core.Manager.ComponentSystem;
 
 public class ComponentManager
 {
-    private readonly Dictionary<Type, object> _pools = new();
+    public readonly Dictionary<Type, object> _pools = new();
 
     // Gets an existing pool or creates a pool from given type and returns it
     public ComponentPool<T> GetPool<T>() where T : struct, IComponent

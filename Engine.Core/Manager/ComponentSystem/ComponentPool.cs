@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using Engine.Core.Components.Base;
 
-namespace Engine.Core.Manager.ComponentM;
+namespace Engine.Core.Manager.ComponentSystem;
 
 public class ComponentPool<T> where T : struct, IComponent
 {
@@ -13,6 +13,9 @@ public class ComponentPool<T> where T : struct, IComponent
     // Gets a reference to a component, allowing its data to be modified
     public ref T Get(int entityId) 
         => ref CollectionsMarshal.GetValueRefOrNullRef(_components, entityId);
+
+    public IEnumerable<int> GetIds() => 
+        _components.Keys;
 
     public bool Has(int entityId) 
         => _components.ContainsKey(entityId);
