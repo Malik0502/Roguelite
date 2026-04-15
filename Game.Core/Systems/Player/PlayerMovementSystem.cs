@@ -1,9 +1,8 @@
-﻿using Engine.Core;
+﻿using System.Linq;
 using Engine.Core.Components;
-using Engine.Core.Manager.ComponentM;
-using Engine.Core.Manager.SceneM;
-using Engine.Core.Manager.SystemM;
-using Engine.Core.Constants;
+using Engine.Core.Components.Tags;
+using Engine.Core.Manager.ComponentSystem;
+using Engine.Core.Manager.System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -12,17 +11,12 @@ namespace Game.Core.Systems.Player;
 public class PlayerMovementSystem : ISystem
 {
     private readonly ComponentManager _componentManager;
-    private readonly SceneManager _sceneManager;
-    private Scene _currentScene;
-
-
 
     private const float Velocity = 150f;
 
-    public PlayerMovementSystem(ComponentManager componentManager, SceneManager sceneManager)
+    public PlayerMovementSystem(ComponentManager componentManager)
     {
         _componentManager = componentManager;
-        _sceneManager = sceneManager;
     }
 
     public void Update(float deltaTime)
@@ -41,10 +35,9 @@ public class PlayerMovementSystem : ISystem
         if (input != Vector2.Zero)
             input.Normalize();
 
-        _currentScene = _sceneManager.GetCurrentScene();
-        var player = _currentScene.GetEntity(EngineConstants.PlayerId);
+        var player = _componentManager.GetPool<PlayerTag>().GetIds().First();
 
-        ref var playerTransform = ref _componentManager.GetPool<Transform>().Get(player.Id);
+        ref var playerTransform = ref _componentManager.GetPool<Transform>().Get(player);
 
         playerTransform.Position += input * Velocity * deltaTime;
 

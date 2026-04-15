@@ -1,6 +1,6 @@
 ﻿using Engine.Core.Components.Base;
 
-namespace Engine.Core.Manager.ComponentM;
+namespace Engine.Core.Manager.ComponentSystem;
 
 public class ComponentManager
 {

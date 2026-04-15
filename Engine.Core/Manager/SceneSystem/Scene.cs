@@ -1,4 +1,4 @@
-﻿namespace Engine.Core.Manager.SceneM;
+﻿namespace Engine.Core.Manager.SceneSystem;
 
 public class Scene
 {

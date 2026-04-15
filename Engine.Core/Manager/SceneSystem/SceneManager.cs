@@ -1,4 +1,4 @@
-﻿namespace Engine.Core.Manager.SceneM;
+﻿namespace Engine.Core.Manager.SceneSystem;
 
 public class SceneManager
 {
@@ -16,6 +16,6 @@ public class SceneManager
 
     public Scene GetCurrentScene()
     {
-        return _currentScene;
+        return _currentScene!;
     }
 }

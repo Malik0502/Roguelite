@@ -1,17 +1,15 @@
-﻿using System.Diagnostics;
-using Engine.Core.Config;
+﻿using Engine.Core.Config;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Engine.Core;
 using Engine.Core.Components;
-using Engine.Core.Components.Tags;
 using Engine.Core.Enums;
-using Engine.Core.Manager.ComponentM;
-using Engine.Core.Manager.EntityM;
-using Engine.Core.Manager.SceneM;
-using Engine.Core.Manager.SystemM;
+using Engine.Core.Manager.ComponentSystem;
+using Engine.Core.Manager.EntitySystem;
+using Engine.Core.Manager.SceneSystem;
+using Engine.Core.Manager.System;
 using Game.Core.Systems.Player;
 
 namespace Game.Core
@@ -31,7 +29,6 @@ namespace Game.Core
 
         private ComponentPool<Sprite> _spritePool;
         private ComponentPool<Transform> _transformPool;
-        private ComponentPool<PlayerTag> _playerPool;
 
         #endregion
 
@@ -39,7 +36,7 @@ namespace Game.Core
         {
             
             _graphics = new GraphicsDeviceManager(this);
-            
+
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
@@ -70,7 +67,7 @@ namespace Game.Core
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             _systemManager.UpdateAll(deltaTime);
 
-            Debug.WriteLine(_transformPool.Get(_player.Id).Position);
+            //Debug.WriteLine($"FPS: {GetFramerate(gameTime)}");
 
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
@@ -92,11 +89,10 @@ namespace Game.Core
         private void CreatePlayer()
         {
             _player = _entityFactory.Create(EntityType.Player);
-
-            _transformPool.Add(_player.Id, new Transform() { Position = new Vector2(100, 100) });
-            _spritePool.Add(_player.Id, new Sprite());
-            _playerPool.Add(_player.Id, new PlayerTag());
         }
+
+        private double GetFramerate(GameTime gameTime) 
+            => 1 / gameTime.ElapsedGameTime.TotalSeconds;
 
         #region Registry
 
@@ -129,7 +125,6 @@ namespace Game.Core
         {
             _spritePool = _componentManager.GetPool<Sprite>();
             _transformPool = _componentManager.GetPool<Transform>();
-            _playerPool = _componentManager.GetPool<PlayerTag>();
         }
 
         private void RegisterSystems()
