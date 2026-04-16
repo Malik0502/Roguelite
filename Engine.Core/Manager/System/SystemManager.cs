@@ -14,13 +14,21 @@ public class SystemManager
         return (T)_systems[typeof(T)];
     }
 
-    public void UpdateAll(float deltaTime)
+    public void Initialize()
+    {
+        foreach (var system in _systems.Values)
+        {
+            system.Initialize();
+        }
+    }
+    
+    public void Update(float deltaTime)
     {
         foreach (var system in _systems.Values)
             system.Update(deltaTime);
     }
 
-    public void DrawAll()
+    public void Draw()
     {
         foreach (var drawableSystem in _systems.Values.OfType<IDrawableSystem>())
         {

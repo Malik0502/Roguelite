@@ -5,12 +5,15 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Engine.Core;
 using Engine.Core.Components;
-using Engine.Core.Enums;
 using Engine.Core.Manager.ComponentSystem;
+using Engine.Core.Manager.ContentSystem;
 using Engine.Core.Manager.EntitySystem;
 using Engine.Core.Manager.SceneSystem;
 using Engine.Core.Manager.System;
+using Game.Core.Systems;
+using Game.Core.Systems.Content;
 using Game.Core.Systems.Player;
+using Microsoft.Xna.Framework.Content;
 
 namespace Game.Core
 {
@@ -34,7 +37,6 @@ namespace Game.Core
 
         public Game1()
         {
-            
             _graphics = new GraphicsDeviceManager(this);
 
             Content.RootDirectory = "Content";
@@ -44,28 +46,30 @@ namespace Game.Core
         protected override void Initialize()
         {
             _serviceProvider = BuildServiceProvider();
-            _entityFactory = _serviceProvider.GetService<EntityFactory>();
             _componentManager = _serviceProvider.GetService<ComponentManager>();
             _systemManager = _serviceProvider.GetService<SystemManager>();
-
+            
             RegisterComponentPool();
             RegisterSystems();
+            
+            _entityFactory = _serviceProvider.GetService<EntityFactory>();
 
             CreatePlayer();
-
+            
+            _systemManager.Initialize();
+            
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = _serviceProvider.GetService<SpriteBatch>();
-            _spritePool.Get(_player.Id).Texture = Content.Load<Texture2D>("Player/BlackHead");
         }
 
         protected override void Update(GameTime gameTime)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _systemManager.UpdateAll(deltaTime);
+            _systemManager.Update(deltaTime);
 
             //Debug.WriteLine($"FPS: {GetFramerate(gameTime)}");
 
@@ -83,12 +87,14 @@ namespace Game.Core
             _spriteBatch.Draw(_spritePool.Get(_player.Id).Texture, _transformPool.Get(_player.Id).Position, Color.White);
             _spriteBatch.End();
 
+            _systemManager.Draw();
+            
             base.Draw(gameTime);
         }
 
         private void CreatePlayer()
         {
-            _player = _entityFactory.Create(EntityType.Player);
+            _player = _entityFactory.Create();
         }
 
         private double GetFramerate(GameTime gameTime) 
@@ -106,17 +112,24 @@ namespace Game.Core
         private ServiceCollection RegisterServices()
         {
             var serviceCollection = new ServiceCollection();
-
+            
             serviceCollection.AddSingleton(GraphicsDevice);
             serviceCollection.AddSingleton<GraphicsDeviceManager>();
+            serviceCollection.AddSingleton<SpriteRenderer>();
+            serviceCollection.AddSingleton(Content);
+            serviceCollection.AddSingleton<IContentService, MonoGameContentSystem>();
             serviceCollection.AddSingleton<SpriteBatch>();
             serviceCollection.AddSingleton<EntityFactory>();
+            serviceCollection.AddSingleton<MonoGameContentSystem>();
             serviceCollection.AddSingleton<EntityManager>();
             serviceCollection.AddSingleton<ConfigDeserializer>();
             serviceCollection.AddSingleton<SceneManager>();
             serviceCollection.AddSingleton<ComponentManager>();
             serviceCollection.AddSingleton<SystemManager>();
             serviceCollection.AddSingleton<PlayerMovementSystem>();
+            serviceCollection.AddSingleton<EnemySpawnSystem>();
+            serviceCollection.AddSingleton<EnemyRenderSystem>();
+            
 
             return serviceCollection;
         }
@@ -130,6 +143,8 @@ namespace Game.Core
         private void RegisterSystems()
         {
             _systemManager.AddSystem(_serviceProvider.GetService<PlayerMovementSystem>());
+            _systemManager.AddSystem(_serviceProvider.GetService<EnemySpawnSystem>());
+            _systemManager.AddSystem(_serviceProvider.GetService<EnemyRenderSystem>());
         }
 
         #endregion

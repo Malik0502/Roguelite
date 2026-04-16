@@ -10,22 +10,8 @@ public class EntityFactory
         _entityManager = entityManager;
     }
 
-    public Entity Create(EntityType entityType)
+    public Entity Create()
     {
-        switch (entityType)
-        {
-            case EntityType.Player:
-                return _entityManager.CreatePlayer(entityType);
-            case EntityType.Melee:
-                break;
-            case EntityType.Range:
-                break;
-            case EntityType.Mage:
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(entityType), entityType, null);
-        }
-
-        throw new ArgumentNullException(nameof(entityType), "An error occured while creating an entity");
+        return _entityManager.CreatePlayer();
     }
 }
