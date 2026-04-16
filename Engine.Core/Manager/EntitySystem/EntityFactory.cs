@@ -1,6 +1,4 @@
-﻿using Engine.Core.Enums;
-
-namespace Engine.Core.Manager.EntitySystem;
+﻿namespace Engine.Core.Manager.EntitySystem;
 
 public class EntityFactory
 {

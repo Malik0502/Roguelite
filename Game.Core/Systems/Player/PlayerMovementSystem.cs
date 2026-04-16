@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Linq;
+﻿using System.Linq;
 using Engine.Core.Components;
 using Engine.Core.Components.Tags;
 using Engine.Core.Manager.ComponentSystem;

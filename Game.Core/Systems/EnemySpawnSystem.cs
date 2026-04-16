@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Engine.Core;
 using Engine.Core.Components;
@@ -37,6 +38,7 @@ public class EnemySpawnSystem : ISystem
         _spawnerPool = _componentManager.GetPool<Spawner>();
     }
 
+    // texture is null (Enemy spawning)
     public void Update(float deltaTime)
     {
         ref var playerSpawner = ref _spawnerPool.Get(_player);
@@ -61,5 +63,7 @@ public class EnemySpawnSystem : ISystem
         
         playerSpawner.SpawnCount++;
         playerSpawner.MaxSpawns--;
+        
+        Debug.WriteLine($"Spawn Count: {Enemies.Count}");
     }
 }

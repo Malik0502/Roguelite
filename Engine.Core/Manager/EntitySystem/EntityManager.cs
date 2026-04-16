@@ -42,7 +42,7 @@ public class EntityManager
         var entity = CreateLivingEntity(new Vector2(100, 100), EntityType.Player);
         
         _spawnerPool.Add(entity.Id, new Spawner 
-            { Radius = 250, SpawnLimit = 20, SpawnTimer = TimeSpan.FromSeconds(2) });
+            { Radius = 250, SpawnLimit = 20, SpawnTimer = TimeSpan.FromSeconds(2), MaxSpawns = 50});
 
         return entity;
     }

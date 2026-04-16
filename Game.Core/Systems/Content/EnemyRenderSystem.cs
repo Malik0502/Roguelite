@@ -1,4 +1,3 @@
-using System;
 using Engine.Core;
 using Engine.Core.Components;
 using Engine.Core.Manager.ComponentSystem;
@@ -6,7 +5,7 @@ using Engine.Core.Manager.System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Game.Core.Systems;
+namespace Game.Core.Systems.Content;
 
 public class EnemyRenderSystem : IDrawableSystem
 {
@@ -31,7 +30,6 @@ public class EnemyRenderSystem : IDrawableSystem
 
     public void Update(float deltaTime)
     {
-        return;
     }
 
     public void Draw()
