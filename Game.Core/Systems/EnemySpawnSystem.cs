@@ -56,7 +56,7 @@ public class EnemySpawnSystem : ISystem
         var randomYPos = new Random().Next(playerPosY - playerSpawner.Radius, playerPosY + playerSpawner.Radius);
         
         var randomEnemyPos = new Vector2(randomXPos, randomYPos);
-        var randomEntityType = (EntityType)new Random().Next((int)EntityType.Player, (int)EntityType.Mage);
+        var randomEntityType = (EntityType)new Random().Next((int)EntityType.Melee, ((int)EntityType.Mage + 1));
 
         var enemy = _entityManager.CreateEnemy(randomEntityType, randomEnemyPos);
         Enemies.Add(enemy);

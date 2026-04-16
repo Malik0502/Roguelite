@@ -1,4 +1,5 @@
-﻿using Engine.Core.Config;
+﻿using System.Diagnostics;
+using Engine.Core.Config;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -71,7 +72,7 @@ namespace Game.Core
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             _systemManager.Update(deltaTime);
 
-            //Debug.WriteLine($"FPS: {GetFramerate(gameTime)}");
+            Debug.WriteLine($"FPS: {GetFramerate(gameTime)}");
 
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();

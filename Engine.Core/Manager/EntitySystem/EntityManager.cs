@@ -42,7 +42,7 @@ public class EntityManager
         var entity = CreateLivingEntity(new Vector2(100, 100), EntityType.Player);
         
         _spawnerPool.Add(entity.Id, new Spawner 
-            { Radius = 250, SpawnLimit = 20, SpawnTimer = TimeSpan.FromSeconds(2), MaxSpawns = 50});
+            { Radius = 250, SpawnLimit = 20, SpawnTimer = TimeSpan.FromSeconds(2), MaxSpawns = 5000});
 
         return entity;
     }
@@ -55,15 +55,15 @@ public class EntityManager
         {
             case EntityType.Melee:
                 _spritePool.Add(entity.Id, 
-                    new Sprite(){Texture = _content.GetTexture("Enemies/AngryBlackSlime")});
+                    new Sprite{Texture = _content.GetTexture("Enemies/AngryRedSlime")});
                 _meleePool.Add(entity.Id, new MeleeTag());
                 break;
             case EntityType.Range:
-                _spritePool.Add(entity.Id, new Sprite());
+                _spritePool.Add(entity.Id, new Sprite{Texture = _content.GetTexture("Enemies/AngryGreenSlime")});
                 _rangePool.Add(entity.Id, new RangeTag());
                 break;
             case EntityType.Mage:
-                _spritePool.Add(entity.Id, new Sprite());
+                _spritePool.Add(entity.Id, new Sprite{Texture = _content.GetTexture("Enemies/AngryPurpleSlime")});
                 _magePool.Add(entity.Id, new MageTag());
                 break;
             default:
