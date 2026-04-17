@@ -14,7 +14,6 @@ using Engine.Core.Manager.System;
 using Game.Core.Systems;
 using Game.Core.Systems.Content;
 using Game.Core.Systems.Player;
-using Microsoft.Xna.Framework.Content;
 
 namespace Game.Core
 {
@@ -72,7 +71,7 @@ namespace Game.Core
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             _systemManager.Update(deltaTime);
 
-            Debug.WriteLine($"FPS: {GetFramerate(gameTime)}");
+            //Debug.WriteLine($"FPS: {GetFramerate(gameTime)}");
 
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
@@ -83,10 +82,6 @@ namespace Game.Core
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            _spriteBatch.Begin();
-            _spriteBatch.Draw(_spritePool.Get(_player.Id).Texture, _transformPool.Get(_player.Id).Position, Color.White);
-            _spriteBatch.End();
 
             _systemManager.Draw();
             
@@ -129,7 +124,7 @@ namespace Game.Core
             serviceCollection.AddSingleton<SystemManager>();
             serviceCollection.AddSingleton<PlayerMovementSystem>();
             serviceCollection.AddSingleton<EnemySpawnSystem>();
-            serviceCollection.AddSingleton<EnemyRenderSystem>();
+            serviceCollection.AddSingleton<RenderSystem>();
             
 
             return serviceCollection;
@@ -145,7 +140,7 @@ namespace Game.Core
         {
             _systemManager.AddSystem(_serviceProvider.GetService<PlayerMovementSystem>());
             _systemManager.AddSystem(_serviceProvider.GetService<EnemySpawnSystem>());
-            _systemManager.AddSystem(_serviceProvider.GetService<EnemyRenderSystem>());
+            _systemManager.AddSystem(_serviceProvider.GetService<RenderSystem>());
         }
 
         #endregion

@@ -1,25 +1,26 @@
 using Engine.Core;
 using Engine.Core.Components;
 using Engine.Core.Manager.ComponentSystem;
+using Engine.Core.Manager.SceneSystem;
 using Engine.Core.Manager.System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Game.Core.Systems.Content;
 
-public class EnemyRenderSystem : IDrawableSystem
+public class RenderSystem : IDrawableSystem
 {
-    private readonly EnemySpawnSystem _enemySystem;
     private readonly ComponentManager _componentManager;
     private readonly SpriteBatch _spriteBatch;
+    private readonly SceneManager _sceneManager;
     private ComponentPool<Sprite> _spritePool;
     private ComponentPool<Transform> _transformPool;
 
-    public EnemyRenderSystem(EnemySpawnSystem enemySystem, ComponentManager componentManager, SpriteBatch spriteBatch)
+    public RenderSystem(ComponentManager componentManager, SpriteBatch spriteBatch, SceneManager sceneManager)
     {
-        _enemySystem = enemySystem;
         _componentManager = componentManager;
         _spriteBatch = spriteBatch;
+        _sceneManager = sceneManager;
     }
 
     public void Initialize()
@@ -34,16 +35,16 @@ public class EnemyRenderSystem : IDrawableSystem
 
     public void Draw()
     {
-        foreach (var enemy in _enemySystem.Enemies)
+        foreach (var entity in _sceneManager.GetCurrentScene().GetEntities())
         {
-            DrawEnemy(enemy);
+            DrawEntity(entity);
         }
     }
 
-    private void DrawEnemy(Entity enemy)
+    private void DrawEntity(Entity entity)
     {
         _spriteBatch.Begin();
-        _spriteBatch.Draw(_spritePool.Get(enemy.Id).Texture, _transformPool.Get(enemy.Id).Position, Color.White);
+        _spriteBatch.Draw(_spritePool.Get(entity.Id).Texture, _transformPool.Get(entity.Id).Position, Color.White);
         _spriteBatch.End();
     }
 }
