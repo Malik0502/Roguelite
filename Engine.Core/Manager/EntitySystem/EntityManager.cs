@@ -39,17 +39,19 @@ public class EntityManager
 
     public Entity CreatePlayer()
     {
-        var entity = CreateLivingEntity(new Vector2(100, 100), EntityType.Player);
+        var spriteScale = 1f;
+        var entity = CreateLivingEntity(new Vector2(200, 200), EntityType.Player, spriteScale);
         
         _spawnerPool.Add(entity.Id, new Spawner 
-            { Radius = 250, SpawnLimit = 20, SpawnTimer = TimeSpan.FromSeconds(2), MaxSpawns = 5000});
+            { Radius = 150, SpawnLimit = 20, SpawnTimer = TimeSpan.FromSeconds(2), MaxSpawns = 5000});
 
         return entity;
     }
 
     public Entity CreateEnemy(EntityType entityType, Vector2 spawnPos)
     {
-        var entity = CreateLivingEntity(spawnPos, entityType);
+        var spriteScale = 1.5f;
+        var entity = CreateLivingEntity(spawnPos, entityType, spriteScale);
         
         switch (entityType)
         {
@@ -75,7 +77,7 @@ public class EntityManager
 
     #region private methods
     
-    private Entity CreateLivingEntity(Vector2 spawnPos, EntityType entityType)
+    private Entity CreateLivingEntity(Vector2 spawnPos, EntityType entityType, float scale)
     {
         var entity = new Entity
         {
@@ -85,7 +87,7 @@ public class EntityManager
         
         _healthPool.Add(entity.Id, new Health());
         _transformPool.Add(entity.Id, new Transform
-            {Position = spawnPos});
+            {Position = spawnPos, Scale = scale});
 
         if (entityType != EntityType.Player)
         {

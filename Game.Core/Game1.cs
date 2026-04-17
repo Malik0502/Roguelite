@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Engine.Core.Config;
+﻿using Engine.Core.Config;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -20,7 +19,6 @@ namespace Game.Core
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
         private ServiceProvider _serviceProvider;
         private EntityFactory _entityFactory;
         private ComponentManager _componentManager;
@@ -38,6 +36,11 @@ namespace Game.Core
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
+
+            _graphics.PreferredBackBufferHeight = 1080;
+            _graphics.PreferredBackBufferWidth = 1920;
+
+            _graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -63,7 +66,6 @@ namespace Game.Core
 
         protected override void LoadContent()
         {
-            _spriteBatch = _serviceProvider.GetService<SpriteBatch>();
         }
 
         protected override void Update(GameTime gameTime)
