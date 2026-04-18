@@ -3,8 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Extensions.DependencyInjection;
-using Engine.Core;
-using Engine.Core.Components;
 using Engine.Core.Manager.ComponentSystem;
 using Engine.Core.Manager.ContentSystem;
 using Engine.Core.Manager.EntitySystem;
@@ -21,25 +19,20 @@ namespace Game.Core
         private GraphicsDeviceManager _graphics;
         private ServiceProvider _serviceProvider;
         private EntityFactory _entityFactory;
-        private ComponentManager _componentManager;
         private SystemManager _systemManager;
-
-        private Entity _player;
-
-        #region Pools
-
-        private ComponentPool<Sprite> _spritePool;
-        private ComponentPool<Transform> _transformPool;
-
-        #endregion
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
 
-            _graphics.PreferredBackBufferHeight = 1080;
-            _graphics.PreferredBackBufferWidth = 1920;
+            // macbook testing
+            _graphics.PreferredBackBufferHeight = 768;
+            _graphics.PreferredBackBufferWidth = 1024;
 
+            // home pc testing
+            // _graphics.PreferredBackBufferHeight = 1080;
+            // _graphics.PreferredBackBufferWidth = 1920;
+            
             _graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
@@ -49,10 +42,8 @@ namespace Game.Core
         protected override void Initialize()
         {
             _serviceProvider = BuildServiceProvider();
-            _componentManager = _serviceProvider.GetService<ComponentManager>();
             _systemManager = _serviceProvider.GetService<SystemManager>();
             
-            RegisterComponentPool();
             RegisterSystems();
             
             _entityFactory = _serviceProvider.GetService<EntityFactory>();
@@ -92,7 +83,7 @@ namespace Game.Core
 
         private void CreatePlayer()
         {
-            _player = _entityFactory.Create();
+            _entityFactory.Create();
         }
 
         private double GetFramerate(GameTime gameTime) 
@@ -131,13 +122,7 @@ namespace Game.Core
 
             return serviceCollection;
         }
-
-        private void RegisterComponentPool()
-        {
-            _spritePool = _componentManager.GetPool<Sprite>();
-            _transformPool = _componentManager.GetPool<Transform>();
-        }
-
+        
         private void RegisterSystems()
         {
             _systemManager.AddSystem(_serviceProvider.GetService<PlayerMovementSystem>());
