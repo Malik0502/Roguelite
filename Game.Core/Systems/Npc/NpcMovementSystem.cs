@@ -43,7 +43,7 @@ public class NpcMovementSystem : ISystem
             var directionVector = (playerPosition - position);
             directionVector.Rotate((float)randomRadiantDeviation);
             directionVector.Normalize();
-            
+
             position += directionVector * Velocity * deltaTime;
 
             _spatialGrid.SetEntity(enemyId, Cell.Create(position.X, position.Y));

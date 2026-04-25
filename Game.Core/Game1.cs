@@ -27,12 +27,12 @@ namespace Game.Core
             _graphics = new GraphicsDeviceManager(this);
 
             // macbook testing
-            _graphics.PreferredBackBufferHeight = 768;
-            _graphics.PreferredBackBufferWidth = 1024;
+            //_graphics.PreferredBackBufferHeight = 768;
+            //_graphics.PreferredBackBufferWidth = 1024;
 
             // home pc testing
-            // _graphics.PreferredBackBufferHeight = 1080;
-            // _graphics.PreferredBackBufferWidth = 1920;
+            _graphics.PreferredBackBufferHeight = 1080;
+            _graphics.PreferredBackBufferWidth = 1920;
             
             _graphics.ApplyChanges();
 

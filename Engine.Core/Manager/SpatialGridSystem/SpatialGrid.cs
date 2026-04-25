@@ -28,6 +28,57 @@ public class SpatialGrid
         AddEntity(entityId, newCell);
     }
 
+    public void RemoveEntity(int entityId)
+    {
+        if (!TryGetCell(entityId, out Cell cell))
+            return;
+
+        if (_cells.TryGetValue(cell, out var list))
+        {
+            list.Remove(entityId);
+
+            if (list.Count == 0)
+                _cells.Remove(cell);
+        }
+
+        _entityCell.Remove(entityId);
+    }
+
+    public List<int> GetNeighbours(int entityId)
+    {
+        var result = new List<int>();
+
+        if (!_entityCell.TryGetValue(entityId, out var cell))
+            return result;
+
+        for (int dx = -1; dx <= 1; dx++)
+        {
+            for (int dy = -1; dy <= 1; dy++)
+            {
+                var neighborCell = Cell.Create(cell.X + dx, cell.Y + dy);
+
+                if (!_cells.TryGetValue(neighborCell, out var list))
+                    continue;
+
+                result.AddRange(list.Where(other => other != entityId));
+            }
+        }
+
+        return result;
+    }
+
+    public List<int>? GetEntities(Cell cell)
+    {
+        return _cells.GetValueOrDefault(cell);
+    }
+
+    public bool TryGetCell(int entityId, out Cell cell)
+    {
+        return _entityCell.TryGetValue(entityId, out cell);
+    }
+
+    #region private methods
+
     private void UpdateOldCell(int entityId, Cell oldCell)
     {
         var oldList = _cells[oldCell];
@@ -50,29 +101,7 @@ public class SpatialGrid
         list.Add(entityId);
     }
 
-    public void RemoveEntity(int entityId)
-    {
-        if (!TryGetCell(entityId, out Cell cell))
-            return;
+    #endregion
 
-        if (_cells.TryGetValue(cell, out var list))
-        {
-            list.Remove(entityId);
 
-            if (list.Count == 0)
-                _cells.Remove(cell);
-        }
-
-        _entityCell.Remove(entityId);
-    }
-
-    public List<int>? GetEntities(Cell cell)
-    {
-        return _cells.GetValueOrDefault(cell);
-    }
-
-    public bool TryGetCell(int entityId, out Cell cell)
-    {
-        return _entityCell.TryGetValue(entityId, out cell);
-    }
 }
