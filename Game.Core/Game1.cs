@@ -7,6 +7,7 @@ using Engine.Core.Manager.ComponentSystem;
 using Engine.Core.Manager.ContentSystem;
 using Engine.Core.Manager.EntitySystem;
 using Engine.Core.Manager.SceneSystem;
+using Engine.Core.Manager.SpatialGridSystem;
 using Engine.Core.Manager.System;
 using Game.Core.Systems.Content;
 using Game.Core.Systems.Npc;
@@ -119,6 +120,7 @@ namespace Game.Core
             serviceCollection.AddSingleton<EnemySpawnSystem>();
             serviceCollection.AddSingleton<RenderSystem>();
             serviceCollection.AddSingleton<NpcMovementSystem>();
+            serviceCollection.AddSingleton<SpatialGrid>();
 
             return serviceCollection;
         }

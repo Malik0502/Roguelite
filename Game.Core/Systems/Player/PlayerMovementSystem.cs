@@ -2,6 +2,7 @@
 using Engine.Core.Components;
 using Engine.Core.Components.Tags;
 using Engine.Core.Manager.ComponentSystem;
+using Engine.Core.Manager.SpatialGridSystem;
 using Engine.Core.Manager.System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -11,15 +12,17 @@ namespace Game.Core.Systems.Player;
 public class PlayerMovementSystem : ISystem
 {
     private readonly ComponentManager _componentManager;
+    private readonly SpatialGrid _spatialGrid;
 
     private const float Velocity = 150f;
 
     private int _player;
     private ComponentPool<Transform> _transformPool;
 
-    public PlayerMovementSystem(ComponentManager componentManager)
+    public PlayerMovementSystem(ComponentManager componentManager, SpatialGrid spatialGrid)
     {
         _componentManager = componentManager;
+        _spatialGrid = spatialGrid;
     }
 
     public void Initialize()
@@ -46,8 +49,10 @@ public class PlayerMovementSystem : ISystem
         if (input != Vector2.Zero)
             input.Normalize();
 
-        ref var transform = ref _transformPool.Get(_player);
+        ref var position = ref _transformPool.Get(_player).Position;
         
-        transform.Position += input * Velocity * deltaTime;
+        position += input * Velocity * deltaTime;
+
+        _spatialGrid.SetEntity(_player, Cell.Create(position.X, position.Y));
     }
 }

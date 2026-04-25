@@ -4,6 +4,7 @@ using Engine.Core.Enums;
 using Engine.Core.Manager.ComponentSystem;
 using Engine.Core.Manager.ContentSystem;
 using Engine.Core.Manager.SceneSystem;
+using Engine.Core.Manager.SpatialGridSystem;
 using Microsoft.Xna.Framework;
 
 namespace Engine.Core.Manager.EntitySystem;
@@ -13,6 +14,7 @@ public class EntityManager
     private readonly SceneManager _sceneManager;
     private readonly ComponentManager _componentManager;
     private readonly SpriteRenderer _content;
+    private readonly SpatialGrid _spatialGrid;
     private int _entityId;
 
     #region ComponentPools
@@ -29,11 +31,12 @@ public class EntityManager
 
     #endregion
     
-    public EntityManager(SceneManager sceneManager, ComponentManager componentManager, SpriteRenderer content)
+    public EntityManager(SceneManager sceneManager, ComponentManager componentManager, SpriteRenderer content, SpatialGrid spatialGrid)
     {
         _sceneManager = sceneManager;
         _componentManager = componentManager;
         _content = content;
+        _spatialGrid = spatialGrid;
         LoadPool();
     }
 
@@ -88,6 +91,8 @@ public class EntityManager
         _healthPool.Add(entity.Id, new Health());
         _transformPool.Add(entity.Id, new Transform
             {Position = spawnPos, Scale = scale});
+
+        _spatialGrid.SetEntity(entity.Id, Cell.Create(spawnPos.X, spawnPos.Y));
 
         if (entityType != EntityType.Player)
         {

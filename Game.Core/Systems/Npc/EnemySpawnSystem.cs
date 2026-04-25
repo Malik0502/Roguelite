@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Engine.Core;
 using Engine.Core.Components;
@@ -38,7 +37,6 @@ public class EnemySpawnSystem : ISystem
         _spawnerPool = _componentManager.GetPool<Spawner>();
     }
 
-    // texture is null (Enemy spawning)
     public void Update(float deltaTime)
     {
         ref var playerSpawner = ref _spawnerPool.Get(_player);
@@ -54,16 +52,14 @@ public class EnemySpawnSystem : ISystem
         
         var randomXPos = new Random().Next(playerPosX - playerSpawner.Radius, playerPosX + playerSpawner.Radius);
         var randomYPos = new Random().Next(playerPosY - playerSpawner.Radius, playerPosY + playerSpawner.Radius);
-        
+
         var randomEnemyPos = new Vector2(randomXPos, randomYPos);
-        var randomEntityType = (EntityType)new Random().Next((int)EntityType.Melee, ((int)EntityType.Mage + 1));
+        var randomEntityType = (EntityType)new Random().Next((int)EntityType.Melee, (int)EntityType.Mage + 1);
 
         var enemy = _entityManager.CreateEnemy(randomEntityType, randomEnemyPos);
         Enemies.Add(enemy);
-        
+
         playerSpawner.SpawnCount++;
         playerSpawner.MaxSpawns--;
-        
-        Debug.WriteLine($"Spawn Count: {Enemies.Count}");
     }
 }
