@@ -8,8 +8,8 @@ using Engine.Core.Manager.ContentSystem;
 using Engine.Core.Manager.EntitySystem;
 using Engine.Core.Manager.SceneSystem;
 using Engine.Core.Manager.System;
-using Game.Core.Systems;
 using Game.Core.Systems.Content;
+using Game.Core.Systems.Npc;
 using Game.Core.Systems.Player;
 
 namespace Game.Core
@@ -118,7 +118,7 @@ namespace Game.Core
             serviceCollection.AddSingleton<PlayerMovementSystem>();
             serviceCollection.AddSingleton<EnemySpawnSystem>();
             serviceCollection.AddSingleton<RenderSystem>();
-            
+            serviceCollection.AddSingleton<NpcMovementSystem>();
 
             return serviceCollection;
         }
@@ -128,6 +128,7 @@ namespace Game.Core
             _systemManager.AddSystem(_serviceProvider.GetService<PlayerMovementSystem>());
             _systemManager.AddSystem(_serviceProvider.GetService<EnemySpawnSystem>());
             _systemManager.AddSystem(_serviceProvider.GetService<RenderSystem>());
+            _systemManager.AddSystem(_serviceProvider.GetService<NpcMovementSystem>());
         }
 
         #endregion

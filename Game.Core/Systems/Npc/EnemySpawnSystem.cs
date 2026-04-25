@@ -11,7 +11,7 @@ using Engine.Core.Manager.EntitySystem;
 using Engine.Core.Manager.System;
 using Microsoft.Xna.Framework;
 
-namespace Game.Core.Systems;
+namespace Game.Core.Systems.Npc;
 
 public class EnemySpawnSystem : ISystem
 {
