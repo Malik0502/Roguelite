@@ -11,7 +11,6 @@ namespace Game.Core.Systems.Content;
 public class RenderSystem : IDrawableSystem
 {
     private readonly ComponentManager _componentManager;
-    private readonly SpriteBatch _spriteBatch;
     private readonly SceneManager _sceneManager;
     private readonly GraphicsDevice _graphics;
     private ComponentPool<Sprite> _spritePool;
@@ -20,10 +19,9 @@ public class RenderSystem : IDrawableSystem
     private bool _shouldUpdate;
     private Matrix _spriteScaleMatrix;
 
-    public RenderSystem(ComponentManager componentManager, SpriteBatch spriteBatch, SceneManager sceneManager, GraphicsDevice graphics)
+    public RenderSystem(ComponentManager componentManager, SceneManager sceneManager, GraphicsDevice graphics)
     {
         _componentManager = componentManager;
-        _spriteBatch = spriteBatch;
         _sceneManager = sceneManager;
         _graphics = graphics;
     }
@@ -42,24 +40,22 @@ public class RenderSystem : IDrawableSystem
         _shouldUpdate = false;
     }
 
-    public void Draw()
+    public void Draw(SpriteBatch spriteBatch)
     {
+        spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _spriteScaleMatrix);
         foreach (var entity in _sceneManager.GetCurrentScene().GetEntities())
         {
-            DrawEntity(entity);
+            DrawEntity(entity, spriteBatch);
         }
+        spriteBatch.End();
     }
 
-    private void DrawEntity(Entity entity)
+    private void DrawEntity(Entity entity, SpriteBatch spriteBatch)
     {
         var entityTexture = _spritePool.Get(entity.Id).Texture;
         var entityTransform = _transformPool.Get(entity.Id);
 
-        _spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _spriteScaleMatrix);
-
-        _spriteBatch.Draw(entityTexture, entityTransform.Position, entityTransform.Scale);
-
-        _spriteBatch.End();
+        spriteBatch.Draw(entityTexture, entityTransform.Position, entityTransform.Scale);
     }
 
     private void UpdateScaleMatrix()
