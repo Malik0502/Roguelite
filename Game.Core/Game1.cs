@@ -9,6 +9,7 @@ using Engine.Core.Manager.EntitySystem;
 using Engine.Core.Manager.SceneSystem;
 using Engine.Core.Manager.SpatialGridSystem;
 using Engine.Core.Manager.System;
+using Game.Core.Systems.Collision;
 using Game.Core.Systems.Content;
 using Game.Core.Systems.Npc;
 using Game.Core.Systems.Player;
@@ -17,24 +18,23 @@ namespace Game.Core
 {
     public class Game1 : Microsoft.Xna.Framework.Game
     {
-        private GraphicsDeviceManager _graphics;
         private ServiceProvider _serviceProvider;
         private EntityFactory _entityFactory;
         private SystemManager _systemManager;
 
         public Game1()
         {
-            _graphics = new GraphicsDeviceManager(this);
+            var graphics = new GraphicsDeviceManager(this);
 
             // macbook testing
-            _graphics.PreferredBackBufferHeight = 768;
-            _graphics.PreferredBackBufferWidth = 1024;
+            graphics.PreferredBackBufferHeight = 768;
+            graphics.PreferredBackBufferWidth = 1024;
 
             // home pc testing
             // _graphics.PreferredBackBufferHeight = 1080;
             // _graphics.PreferredBackBufferWidth = 1920;
             
-            _graphics.ApplyChanges();
+            graphics.ApplyChanges();
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -62,7 +62,7 @@ namespace Game.Core
 
         protected override void Update(GameTime gameTime)
         {
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             _systemManager.Update(deltaTime);
 
             //Debug.WriteLine($"FPS: {GetFramerate(gameTime)}");
@@ -121,6 +121,7 @@ namespace Game.Core
             serviceCollection.AddSingleton<RenderSystem>();
             serviceCollection.AddSingleton<NpcMovementSystem>();
             serviceCollection.AddSingleton<SpatialGrid>();
+            serviceCollection.AddSingleton<RectangleColliderRenderSystem>();
 
             return serviceCollection;
         }
@@ -131,6 +132,7 @@ namespace Game.Core
             _systemManager.AddSystem(_serviceProvider.GetService<EnemySpawnSystem>());
             _systemManager.AddSystem(_serviceProvider.GetService<RenderSystem>());
             _systemManager.AddSystem(_serviceProvider.GetService<NpcMovementSystem>());
+            _systemManager.AddSystem(_serviceProvider.GetService<RectangleColliderRenderSystem>());
         }
 
         #endregion

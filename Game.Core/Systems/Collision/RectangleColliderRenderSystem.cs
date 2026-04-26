@@ -1,8 +1,9 @@
-using System.Linq;
+using Engine.Core.Components;
 using Engine.Core.Components.Collision;
-using Engine.Core.Components.Tags;
+using Engine.Core.Extensions;
 using Engine.Core.Manager.ComponentSystem;
 using Engine.Core.Manager.System;
+using Game.Core.Systems.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Game.Core.Systems.Collision;
@@ -11,7 +12,7 @@ public class RectangleColliderRenderSystem : IDrawableSystem
 {
     private readonly ComponentManager _componentManager;
     private ComponentPool<RectangleCollider> _rectangleColliderPool;
-    private int _playerId;
+    private ComponentPool<Transform> _transformPool;
 
     public RectangleColliderRenderSystem(ComponentManager componentManager)
     {
@@ -20,17 +21,29 @@ public class RectangleColliderRenderSystem : IDrawableSystem
     
     public void Initialize()
     {
-        _playerId = _componentManager.GetPool<PlayerTag>().GetIds().First();
         _rectangleColliderPool = _componentManager.GetPool<RectangleCollider>();
+        _transformPool = _componentManager.GetPool<Transform>();
     }
 
     public void Update(float deltaTime)
     {
-        throw new System.NotImplementedException();
+        
     }
 
     public void Draw(SpriteBatch spriteBatch)
     {
-        throw new System.NotImplementedException();
+        spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: RenderSystem.SpriteScaleMatrix);
+        var borderThickness = 2;
+        
+        foreach (var entity in _rectangleColliderPool.GetIds())
+        {
+            ref var collider =  ref _rectangleColliderPool.Get(entity);
+            var entityPos = _transformPool.Get(entity).Position;
+
+            collider.Rectangle.Location = entityPos.ToPoint();
+            
+            spriteBatch.DrawRectangleOutline(collider.Rectangle, borderThickness, collider.Color);
+        }
+        spriteBatch.End();
     }
 }

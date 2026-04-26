@@ -17,7 +17,7 @@ public class SpatialGrid
 
     public void SetEntity(int entityId, Cell newCell)
     {
-        if (TryGetCell(entityId, out Cell oldCell))
+        if (TryGetCell(entityId, out var oldCell))
         {
             if (oldCell.Equals(newCell))
                 return;
@@ -30,7 +30,7 @@ public class SpatialGrid
 
     public void RemoveEntity(int entityId)
     {
-        if (!TryGetCell(entityId, out Cell cell))
+        if (!TryGetCell(entityId, out var cell))
             return;
 
         if (_cells.TryGetValue(cell, out var list))
@@ -51,9 +51,9 @@ public class SpatialGrid
         if (!_entityCell.TryGetValue(entityId, out var cell))
             return result;
 
-        for (int dx = -1; dx <= 1; dx++)
+        for (var dx = -1; dx <= 1; dx++)
         {
-            for (int dy = -1; dy <= 1; dy++)
+            for (var dy = -1; dy <= 1; dy++)
             {
                 var neighborCell = Cell.Create(cell.X + dx, cell.Y + dy);
 

@@ -19,8 +19,8 @@ public class EnemySpawnSystem : ISystem
 
     private ComponentPool<Transform> _transformPool;
     private ComponentPool<Spawner> _spawnerPool;
-    
-    public readonly List<Entity> Enemies = new();
+
+    private readonly List<Entity> Enemies = [];
     
     private int _player;
     

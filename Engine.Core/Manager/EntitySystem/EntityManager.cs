@@ -1,6 +1,8 @@
 ﻿using Engine.Core.Components;
+using Engine.Core.Components.Collision;
 using Engine.Core.Components.Tags;
 using Engine.Core.Enums;
+using Engine.Core.Factories;
 using Engine.Core.Manager.ComponentSystem;
 using Engine.Core.Manager.ContentSystem;
 using Engine.Core.Manager.SceneSystem;
@@ -28,6 +30,7 @@ public class EntityManager
     private ComponentPool<RangeTag> _rangePool = null!;
     private ComponentPool<MageTag> _magePool = null!;
     private ComponentPool<EnemyTag> _enemyPool = null!;
+    private ComponentPool<RectangleCollider> _rectangleColliderPool = null!;
 
     #endregion
     
@@ -42,18 +45,20 @@ public class EntityManager
 
     public Entity CreatePlayer()
     {
-        var spriteScale = 1f;
-        var entity = CreateLivingEntity(new Vector2(200, 200), EntityType.Player, spriteScale);
+        const float spriteScale = 1f;
+        var spawnPos = new Vector2(200, 200);
+        var entity = CreateLivingEntity(spawnPos, EntityType.Player, spriteScale);
+        AddRectangleCollider(spawnPos, spriteScale, entity);
         
         _spawnerPool.Add(entity.Id, new Spawner 
-            { Radius = 150, SpawnLimit = 20, SpawnTimer = TimeSpan.FromSeconds(2), MaxSpawns = 200});
+            { Radius = 150, SpawnLimit = 20, SpawnTimer = TimeSpan.FromSeconds(2), MaxSpawns = 3});
 
         return entity;
     }
 
     public Entity CreateEnemy(EntityType entityType, Vector2 spawnPos)
     {
-        var spriteScale = 1.5f;
+        const float spriteScale = 1.5f;
         var entity = CreateLivingEntity(spawnPos, entityType, spriteScale);
         
         switch (entityType)
@@ -74,6 +79,7 @@ public class EntityManager
             default:
                 throw new ArgumentOutOfRangeException(nameof(entityType), entityType, null);
         }
+        AddRectangleCollider(spawnPos, spriteScale, entity);
         
         return entity;
     }
@@ -91,7 +97,7 @@ public class EntityManager
         _healthPool.Add(entity.Id, new Health());
         _transformPool.Add(entity.Id, new Transform
             {Position = spawnPos, Scale = scale});
-
+        
         _spatialGrid.SetEntity(entity.Id, Cell.Create(spawnPos.X, spawnPos.Y));
 
         if (entityType != EntityType.Player)
@@ -104,8 +110,21 @@ public class EntityManager
             _spritePool.Add(entity.Id, new Sprite{Texture = _content.GetTexture("Player/BlackHead")});
         }
         
+        
+
         _sceneManager.GetCurrentScene().AddEntity(entity);
         return entity;
+    }
+
+    private void AddRectangleCollider(Vector2 spawnPos, float scale, Entity entity)
+    {
+        var entityTexture = _spritePool.Get(entity.Id).Texture;
+
+        _rectangleColliderPool.Add(entity.Id, new RectangleCollider
+        {
+            Color = Color.Red,
+            Rectangle = RectangleFactory.ConstructColliderRect(spawnPos, scale, entityTexture)
+        });
     }
 
     private void LoadPool()
@@ -119,7 +138,10 @@ public class EntityManager
         _magePool =  _componentManager.GetPool<MageTag>();
         _spawnerPool = _componentManager.GetPool<Spawner>();
         _enemyPool = _componentManager.GetPool<EnemyTag>();
+        _rectangleColliderPool = _componentManager.GetPool<RectangleCollider>();
     }
+
+    
     
     #endregion
 }

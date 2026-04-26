@@ -40,7 +40,7 @@ public class NpcMovementSystem : ISystem
         {
             var randomRadiantDeviation = new Random().NextDouble();
             ref var position = ref _transformPool.Get(enemyId).Position;
-            var directionVector = (playerPosition - position);
+            var directionVector = playerPosition - position;
             directionVector.Rotate((float)randomRadiantDeviation);
             directionVector.Normalize();
 

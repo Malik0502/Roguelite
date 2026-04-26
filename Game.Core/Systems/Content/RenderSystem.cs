@@ -1,5 +1,6 @@
 using Engine.Core;
 using Engine.Core.Components;
+using Engine.Core.Extensions;
 using Engine.Core.Manager.ComponentSystem;
 using Engine.Core.Manager.SceneSystem;
 using Engine.Core.Manager.System;
@@ -17,7 +18,7 @@ public class RenderSystem : IDrawableSystem
     private ComponentPool<Transform> _transformPool;
 
     private bool _shouldUpdate;
-    private Matrix _spriteScaleMatrix;
+    public static Matrix SpriteScaleMatrix;
 
     public RenderSystem(ComponentManager componentManager, SceneManager sceneManager, GraphicsDevice graphics)
     {
@@ -42,7 +43,7 @@ public class RenderSystem : IDrawableSystem
 
     public void Draw(SpriteBatch spriteBatch)
     {
-        spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _spriteScaleMatrix);
+        spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: SpriteScaleMatrix);
         foreach (var entity in _sceneManager.GetCurrentScene().GetEntities())
         {
             DrawEntity(entity, spriteBatch);
@@ -62,10 +63,10 @@ public class RenderSystem : IDrawableSystem
     {
         // Default resolution is 800x600; scale sprites up or down based on
         // current viewport
-        float screenScale = _graphics.Viewport.Width / 800f;
+        var screenScale = _graphics.Viewport.Width / 800f;
         
         // Create the scale transform for Draw. 
         // Do not scale the sprite depth (Z=1).
-        _spriteScaleMatrix = Matrix.CreateScale(screenScale, screenScale, 1);
+        SpriteScaleMatrix = Matrix.CreateScale(screenScale, screenScale, 1);
     }
 }
