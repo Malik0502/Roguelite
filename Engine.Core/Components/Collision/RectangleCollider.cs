@@ -7,4 +7,5 @@ public struct RectangleCollider : IComponent
 {
     public Rectangle Rectangle;
     public Color Color;
+    public bool IsColliding;
 }

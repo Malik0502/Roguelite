@@ -51,7 +51,7 @@ public class EntityManager
         AddRectangleCollider(spawnPos, spriteScale, entity);
         
         _spawnerPool.Add(entity.Id, new Spawner 
-            { Radius = 150, SpawnLimit = 20, SpawnTimer = TimeSpan.FromSeconds(2), MaxSpawns = 3});
+            { Radius = 150, SpawnLimit = 20, SpawnTimer = TimeSpan.FromSeconds(2), MaxSpawns = 50});
 
         return entity;
     }

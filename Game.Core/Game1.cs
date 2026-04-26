@@ -1,4 +1,5 @@
-﻿using Engine.Core.Config;
+﻿using System.Diagnostics;
+using Engine.Core.Config;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -65,7 +66,7 @@ namespace Game.Core
             var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             _systemManager.Update(deltaTime);
 
-            //Debug.WriteLine($"FPS: {GetFramerate(gameTime)}");
+            Debug.WriteLine($"FPS: {GetFramerate(gameTime)}");
 
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
@@ -122,6 +123,7 @@ namespace Game.Core
             serviceCollection.AddSingleton<NpcMovementSystem>();
             serviceCollection.AddSingleton<SpatialGrid>();
             serviceCollection.AddSingleton<RectangleColliderRenderSystem>();
+            serviceCollection.AddSingleton<RectangleCollisionSystem>();
 
             return serviceCollection;
         }
@@ -133,6 +135,7 @@ namespace Game.Core
             _systemManager.AddSystem(_serviceProvider.GetService<RenderSystem>());
             _systemManager.AddSystem(_serviceProvider.GetService<NpcMovementSystem>());
             _systemManager.AddSystem(_serviceProvider.GetService<RectangleColliderRenderSystem>());
+            _systemManager.AddSystem(_serviceProvider.GetService<RectangleCollisionSystem>());
         }
 
         #endregion
