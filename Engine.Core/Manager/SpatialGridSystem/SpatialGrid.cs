@@ -14,6 +14,14 @@ public class SpatialGrid
     
     // Entity -> Cell
     private readonly Dictionary<int, Cell> _entityCell = new();
+    
+    public static readonly (int x, int y)[] NeighborOffsets =
+    [
+        (1, 0),
+        (0, 1),
+        (1, 1),
+        (-1, 1)
+    ];
 
     public void SetEntity(int entityId, Cell newCell)
     {
@@ -44,35 +52,12 @@ public class SpatialGrid
         _entityCell.Remove(entityId);
     }
 
-    public List<int> GetNeighbours(int entityId)
+    public Dictionary<Cell, List<int>> GetCells()
     {
-        var result = new List<int>();
-
-        if (!_entityCell.TryGetValue(entityId, out var cell))
-            return result;
-
-        for (var dx = -1; dx <= 1; dx++)
-        {
-            for (var dy = -1; dy <= 1; dy++)
-            {
-                var neighborCell = Cell.Create(cell.X + dx, cell.Y + dy);
-
-                if (!_cells.TryGetValue(neighborCell, out var list))
-                    continue;
-
-                result.AddRange(list.Where(other => other != entityId));
-            }
-        }
-
-        return result;
+        return _cells;
     }
-
-    public List<int>? GetEntities(Cell cell)
-    {
-        return _cells.GetValueOrDefault(cell);
-    }
-
-    public bool TryGetCell(int entityId, out Cell cell)
+    
+    private bool TryGetCell(int entityId, out Cell cell)
     {
         return _entityCell.TryGetValue(entityId, out cell);
     }
@@ -102,6 +87,4 @@ public class SpatialGrid
     }
 
     #endregion
-
-
 }

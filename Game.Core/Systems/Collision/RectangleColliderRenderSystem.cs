@@ -4,6 +4,7 @@ using Engine.Core.Extensions;
 using Engine.Core.Manager.ComponentSystem;
 using Engine.Core.Manager.System;
 using Game.Core.Systems.Content;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Game.Core.Systems.Collision;
@@ -13,6 +14,8 @@ public class RectangleColliderRenderSystem : IDrawableSystem
     private readonly ComponentManager _componentManager;
     private ComponentPool<RectangleCollider> _rectangleColliderPool;
     private ComponentPool<Transform> _transformPool;
+
+    private const bool ShouldRender = true;
 
     public RectangleColliderRenderSystem(ComponentManager componentManager)
     {
@@ -32,8 +35,10 @@ public class RectangleColliderRenderSystem : IDrawableSystem
 
     public void Draw(SpriteBatch spriteBatch)
     {
+        if (!ShouldRender) return;
+        
         spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: RenderSystem.SpriteScaleMatrix);
-        var borderThickness = 2;
+        const int borderThickness = 2;
         
         foreach (var entity in _rectangleColliderPool.GetIds())
         {
@@ -42,7 +47,9 @@ public class RectangleColliderRenderSystem : IDrawableSystem
 
             collider.Rectangle.Location = entityPos.ToPoint();
             
-            spriteBatch.DrawRectangleOutline(collider.Rectangle, borderThickness, collider.Color);
+            var colliderColor = collider.IsColliding ? Color.LimeGreen : Color.Red;
+            
+            spriteBatch.DrawRectangleOutline(collider.Rectangle, borderThickness, colliderColor);
         }
         spriteBatch.End();
     }

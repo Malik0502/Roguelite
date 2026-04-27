@@ -4,7 +4,7 @@ public record struct Cell
 {
     public readonly int X;
     public readonly int Y;
-    private const int CellSize = 250;
+    private const int CellSize = 64;
 
     public static Cell Create(float xPos, float yPos)
     {
