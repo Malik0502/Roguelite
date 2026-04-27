@@ -1,3 +1,4 @@
+using System.Linq;
 using Engine.Core.Components.Collision;
 using Engine.Core.Manager.ComponentSystem;
 using Engine.Core.Manager.System;
@@ -22,36 +23,31 @@ public class RectangleCollisionSystem : ISystem
 
     public void Update(float deltaTime)
     {
-        foreach (var entity in _rectangleColliderPool.GetIds())
+        var entities = _rectangleColliderPool.GetIds().ToArray();
+        
+        foreach (var entity in entities)
         {
-            ref var collider = ref _rectangleColliderPool.Get(entity);
-
-            foreach (var otherEntity in _rectangleColliderPool.GetIds())
+            ref var isColliding = ref _rectangleColliderPool.Get(entity).IsColliding;
+            isColliding = false;
+        }
+        
+        for (var i = 0; i < entities.Length; i++)
+        {
+            for (var j = i + 1; j < entities.Length; j++)
             {
-                if (otherEntity == entity) continue;
-                ref var otherCollider = ref _rectangleColliderPool.Get(otherEntity);
+                ref var a = ref _rectangleColliderPool.Get(entities[i]);
+                ref var b = ref _rectangleColliderPool.Get(entities[j]);
 
-                // does not work -> problem with switching between collision states
-                if (!collider.Rectangle.Intersects(otherCollider.Rectangle) && !collider.IsColliding && !otherCollider.IsColliding)
-                {
-                    ChangeColor(ref collider, ref otherCollider, Color.Red);
-                    collider.IsColliding = false;
-                    otherCollider.IsColliding = false;
-                }
-                else
-                {
-                    ChangeColor(ref collider, ref otherCollider, Color.LimeGreen);
-                    collider.IsColliding = true;
-                    otherCollider.IsColliding = true;
-                    
-                }
+                if (!a.Rectangle.Intersects(b.Rectangle)) continue;
+                a.IsColliding = true;
+                b.IsColliding = true;
             }
         }
-    }
-
-    private void ChangeColor(ref RectangleCollider collider, ref RectangleCollider otherCollider, Color color)
-    {
-        collider.Color = color;
-        otherCollider.Color = color;
+        
+        foreach (var entity in entities)
+        {
+            ref var collider = ref _rectangleColliderPool.Get(entity);
+            collider.Color = collider.IsColliding ? Color.LimeGreen : Color.Red;
+        }
     }
 }

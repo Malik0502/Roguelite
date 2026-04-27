@@ -51,7 +51,7 @@ public class EntityManager
         AddRectangleCollider(spawnPos, spriteScale, entity);
         
         _spawnerPool.Add(entity.Id, new Spawner 
-            { Radius = 150, SpawnLimit = 20, SpawnTimer = TimeSpan.FromSeconds(2), MaxSpawns = 50});
+            { Radius = 150, SpawnLimit = 20, SpawnTimer = TimeSpan.FromSeconds(2), MaxSpawns = 2000});
 
         return entity;
     }
@@ -110,8 +110,6 @@ public class EntityManager
             _spritePool.Add(entity.Id, new Sprite{Texture = _content.GetTexture("Player/BlackHead")});
         }
         
-        
-
         _sceneManager.GetCurrentScene().AddEntity(entity);
         return entity;
     }
@@ -140,8 +138,6 @@ public class EntityManager
         _enemyPool = _componentManager.GetPool<EnemyTag>();
         _rectangleColliderPool = _componentManager.GetPool<RectangleCollider>();
     }
-
-    
     
     #endregion
 }
