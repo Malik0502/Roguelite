@@ -23,7 +23,9 @@ public class RectangleCollisionSystem : ISystem
         _rectangleColliderPool = _componentManager.GetPool<RectangleCollider>();
     }
 
-    // Reminder: implement Spatial Partition when game is not stable in the future
+    // Reminder: implement Spatial Partition when game is not stable enough
+    // Game is like brotato -> I don't need collision detection between enemies.
+    // Collision is just between player and enemies
     public void Update(float deltaTime)
     {
         ResetCollidingState();
