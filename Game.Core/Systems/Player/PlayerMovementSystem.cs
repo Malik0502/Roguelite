@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Engine.Core.Components;
 using Engine.Core.Components.Tags;
+using Engine.Core.Constants;
 using Engine.Core.Manager.ComponentSystem;
 using Engine.Core.Manager.SpatialGridSystem;
 using Engine.Core.Manager.System;
@@ -13,8 +14,6 @@ public class PlayerMovementSystem : ISystem
 {
     private readonly ComponentManager _componentManager;
     private readonly SpatialGrid _spatialGrid;
-
-    private const float Velocity = 150f;
 
     private int _player;
     private ComponentPool<Transform> _transformPool;
@@ -51,7 +50,7 @@ public class PlayerMovementSystem : ISystem
 
         ref var position = ref _transformPool.Get(_player).Position;
         
-        position += input * Velocity * deltaTime;
+        position += input * VelocityConstants.PlayerVelocity * deltaTime;
 
         _spatialGrid.SetEntity(_player, Cell.Create(position.X, position.Y));
     }

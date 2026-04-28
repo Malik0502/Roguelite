@@ -10,7 +10,7 @@
 public class SpatialGrid
 {
     // Cell -> Entity
-    private readonly Dictionary<Cell, List<int>> _cells = new();
+    private readonly Dictionary<Cell, List<int>?> _cells = new();
     
     // Entity -> Cell
     private readonly Dictionary<int, Cell> _entityCell = new();
@@ -43,23 +43,28 @@ public class SpatialGrid
 
         if (_cells.TryGetValue(cell, out var list))
         {
-            list.Remove(entityId);
+            list?.Remove(entityId);
 
-            if (list.Count == 0)
+            if (list is { Count: 0 })
                 _cells.Remove(cell);
         }
 
         _entityCell.Remove(entityId);
     }
 
-    public Dictionary<Cell, List<int>> GetCells()
+    public Dictionary<Cell, List<int>?> GetCells()
     {
         return _cells;
     }
     
-    private bool TryGetCell(int entityId, out Cell cell)
+    public bool TryGetCell(int entityId, out Cell cell)
     {
         return _entityCell.TryGetValue(entityId, out cell);
+    }
+
+    public bool TryGetEntities(Cell cell, out List<int>? entities)
+    {
+        return _cells.TryGetValue(cell, out entities);
     }
 
     #region private methods
@@ -67,9 +72,9 @@ public class SpatialGrid
     private void UpdateOldCell(int entityId, Cell oldCell)
     {
         var oldList = _cells[oldCell];
-        oldList.Remove(entityId);
+        oldList?.Remove(entityId);
 
-        if (oldList.Count == 0)
+        if (oldList is { Count: 0 })
             _cells.Remove(oldCell);
     }
 
@@ -83,7 +88,7 @@ public class SpatialGrid
             _cells[cell] = list;
         }
 
-        list.Add(entityId);
+        list?.Add(entityId);
     }
 
     #endregion

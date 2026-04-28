@@ -47,11 +47,12 @@ public class EntityManager
     {
         const float spriteScale = 1f;
         var spawnPos = new Vector2(200, 200);
+
         var entity = CreateLivingEntity(spawnPos, EntityType.Player, spriteScale);
         AddRectangleCollider(spawnPos, spriteScale, entity);
         
         _spawnerPool.Add(entity.Id, new Spawner 
-            { Radius = 150, SpawnLimit = 20, SpawnTimer = TimeSpan.FromSeconds(2), MaxSpawns = 2000});
+            { Radius = 150, SpawnLimit = 20, SpawnTimer = TimeSpan.FromSeconds(2), MaxSpawns = 3000});
 
         return entity;
     }
@@ -97,7 +98,7 @@ public class EntityManager
         _healthPool.Add(entity.Id, new Health());
         _transformPool.Add(entity.Id, new Transform
             {Position = spawnPos, Scale = scale});
-        
+
         _spatialGrid.SetEntity(entity.Id, Cell.Create(spawnPos.X, spawnPos.Y));
 
         if (entityType != EntityType.Player)

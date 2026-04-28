@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using Engine.Core.Components.Collision;
+using Engine.Core.Components.Tags;
 using Engine.Core.Manager.ComponentSystem;
 using Engine.Core.Manager.SpatialGridSystem;
 using Engine.Core.Manager.System;
@@ -11,6 +13,7 @@ public class RectangleCollisionSystem : ISystem
     private readonly ComponentManager _componentManager;
     private readonly SpatialGrid _spatialGrid;
     private ComponentPool<RectangleCollider> _rectangleColliderPool;
+    private int _player;
 
     public RectangleCollisionSystem(ComponentManager componentManager, SpatialGrid spatialGrid)
     {
@@ -21,33 +24,29 @@ public class RectangleCollisionSystem : ISystem
     public void Initialize()
     {
         _rectangleColliderPool = _componentManager.GetPool<RectangleCollider>();
+        _player = _componentManager.GetPool<PlayerTag>().GetIds().First();
     }
 
     // Reminder: implement Spatial Partition when game is not stable enough
-    // Game is like brotato -> I don't need collision detection between enemies.
-    // Collision is just between player and enemies
     public void Update(float deltaTime)
     {
         ResetCollidingState();
 
-        var cells = _spatialGrid.GetCells();
+        if (!_spatialGrid.TryGetCell(_player, out var cell))
+            return;
 
-        foreach (var (cellPos, entitiesA) in cells)
+        if (!_spatialGrid.TryGetEntities(cell, out var entities))
+            return;
+
+        CheckWithinCell(entities);
+        foreach (var offset in SpatialGrid.NeighborOffsets)
         {
-            CheckWithinCell(entitiesA);
+            var neighbourKey = Cell.Create(cell.X + offset.x, cell.Y + offset.y);
 
-            foreach (var offset in SpatialGrid.NeighborOffsets)
-            {
-                var neighborKey = Cell.Create(
-                    cellPos.X + offset.x,
-                    cellPos.Y + offset.y
-                );
+            if (_spatialGrid.TryGetEntities(neighbourKey, out var entitiesB))
+                continue;
 
-                if (!cells.TryGetValue(neighborKey, out var entitiesB))
-                    continue;
-
-                CheckBetweenCells(entitiesA, entitiesB);
-            }
+            CheckBetweenCells(_player, entitiesB);
         }
     }
 
@@ -72,14 +71,14 @@ public class RectangleCollisionSystem : ISystem
         }
     }
 
-    private void CheckBetweenCells(List<int> a, List<int> b)
+    private void CheckBetweenCells(int player, List<int> entities)
     {
-        foreach (var idA in a)
+        if (entities == null)
+            return;
+
+        foreach (var t in entities)
         {
-            foreach (var t in b)
-            {
-                TestCollision(idA, t);
-            }
+            TestCollision(player, t);
         }
     }
 

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Engine.Core.Components;
 using Engine.Core.Components.Tags;
+using Engine.Core.Constants;
 using Engine.Core.Manager.ComponentSystem;
 using Engine.Core.Manager.SpatialGridSystem;
 using Engine.Core.Manager.System;
@@ -15,7 +16,6 @@ public class NpcMovementSystem : ISystem
     private  ComponentPool<Transform> _transformPool;
     private ComponentPool<EnemyTag> _enemyPool;
     private int _playerId;
-    private const float Velocity = 100f;
 
     public NpcMovementSystem(ComponentManager componentManager, SpatialGrid spatialGrid)
     {
@@ -44,7 +44,7 @@ public class NpcMovementSystem : ISystem
             directionVector.Rotate((float)randomRadiantDeviation);
             directionVector.Normalize();
 
-            position += directionVector * Velocity * deltaTime;
+            position += directionVector * VelocityConstants.EnemyVelocity * deltaTime;
 
             _spatialGrid.SetEntity(enemyId, Cell.Create(position.X, position.Y));
         }
