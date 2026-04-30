@@ -1,9 +1,4 @@
-﻿using System.Diagnostics;
-using Engine.Core.Config;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Engine.Core.Config;
 using Engine.Core.Manager.ComponentSystem;
 using Engine.Core.Manager.ContentSystem;
 using Engine.Core.Manager.EntitySystem;
@@ -12,8 +7,13 @@ using Engine.Core.Manager.SpatialGridSystem;
 using Engine.Core.Manager.System;
 using Game.Core.Systems.Collision;
 using Game.Core.Systems.Content;
+using Game.Core.Systems.Content.Tilemap;
 using Game.Core.Systems.Npc;
 using Game.Core.Systems.Player;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Game.Core
 {
@@ -53,7 +53,7 @@ namespace Game.Core
             CreatePlayer();
             
             _systemManager.Initialize();
-            
+
             base.Initialize();
         }
 
@@ -63,10 +63,9 @@ namespace Game.Core
 
         protected override void Update(GameTime gameTime)
         {
-            var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _systemManager.Update(deltaTime);
+            _systemManager.Update(gameTime);
 
-            Debug.WriteLine($"FPS: {GetFramerate(gameTime)}");
+            //Debug.WriteLine($"FPS: {GetFramerate(gameTime)}");
 
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
@@ -105,10 +104,11 @@ namespace Game.Core
             var serviceCollection = new ServiceCollection();
             
             serviceCollection.AddSingleton(GraphicsDevice);
-            serviceCollection.AddSingleton<GraphicsDeviceManager>();
-            serviceCollection.AddSingleton<SpriteRenderer>();
+            serviceCollection.AddSingleton(Window);
             serviceCollection.AddSingleton(Content);
             serviceCollection.AddSingleton<IContentService, MonoGameContentSystem>();
+            serviceCollection.AddSingleton<GraphicsDeviceManager>();
+            serviceCollection.AddSingleton<SpriteRenderer>();
             serviceCollection.AddSingleton<SpriteBatch>();
             serviceCollection.AddSingleton<EntityFactory>();
             serviceCollection.AddSingleton<MonoGameContentSystem>();
@@ -119,6 +119,7 @@ namespace Game.Core
             serviceCollection.AddSingleton<SystemManager>();
             serviceCollection.AddSingleton<PlayerMovementSystem>();
             serviceCollection.AddSingleton<EnemySpawnSystem>();
+            serviceCollection.AddSingleton<TilemapRenderSystem>();
             serviceCollection.AddSingleton<RenderSystem>();
             serviceCollection.AddSingleton<NpcMovementSystem>();
             serviceCollection.AddSingleton<SpatialGrid>();
@@ -130,6 +131,7 @@ namespace Game.Core
         
         private void RegisterSystems()
         {
+            _systemManager.AddSystem(_serviceProvider.GetService<TilemapRenderSystem>());
             _systemManager.AddSystem(_serviceProvider.GetService<PlayerMovementSystem>());
             _systemManager.AddSystem(_serviceProvider.GetService<EnemySpawnSystem>());
             _systemManager.AddSystem(_serviceProvider.GetService<RenderSystem>());

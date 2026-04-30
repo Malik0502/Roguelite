@@ -2,6 +2,7 @@
 using Engine.Core.Components;
 using Engine.Core.Components.Tags;
 using Engine.Core.Constants;
+using Engine.Core.Extensions;
 using Engine.Core.Manager.ComponentSystem;
 using Engine.Core.Manager.SpatialGridSystem;
 using Engine.Core.Manager.System;
@@ -30,7 +31,7 @@ public class PlayerMovementSystem : ISystem
         _transformPool = _componentManager.GetPool<Transform>();
     }
 
-    public void Update(float deltaTime)
+    public void Update(GameTime gameTime)
     {
         var input = Vector2.Zero;
 
@@ -50,7 +51,7 @@ public class PlayerMovementSystem : ISystem
 
         ref var position = ref _transformPool.Get(_player).Position;
         
-        position += input * VelocityConstants.PlayerVelocity * deltaTime;
+        position += input * VelocityConstants.PlayerVelocity * gameTime.DeltaTime();
 
         _spatialGrid.SetEntity(_player, Cell.Create(position.X, position.Y));
     }

@@ -3,9 +3,11 @@ using System.Linq;
 using Engine.Core.Components;
 using Engine.Core.Components.Tags;
 using Engine.Core.Constants;
+using Engine.Core.Extensions;
 using Engine.Core.Manager.ComponentSystem;
 using Engine.Core.Manager.SpatialGridSystem;
 using Engine.Core.Manager.System;
+using Microsoft.Xna.Framework;
 
 namespace Game.Core.Systems.Npc;
 
@@ -32,7 +34,7 @@ public class NpcMovementSystem : ISystem
         _playerId = _componentManager.GetPool<PlayerTag>().GetIds().First();
     }
 
-    public void Update(float deltaTime)
+    public void Update(GameTime gameTime)
     {
         var playerPosition = _transformPool.Get(_playerId).Position;
 
@@ -44,7 +46,7 @@ public class NpcMovementSystem : ISystem
             directionVector.Rotate((float)randomRadiantDeviation);
             directionVector.Normalize();
 
-            position += directionVector * VelocityConstants.EnemyVelocity * deltaTime;
+            position += directionVector * VelocityConstants.EnemyVelocity * gameTime.DeltaTime();
 
             _spatialGrid.SetEntity(enemyId, Cell.Create(position.X, position.Y));
         }

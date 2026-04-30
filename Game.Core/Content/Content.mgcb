@@ -10,6 +10,7 @@
 
 #-------------------------------- References --------------------------------#
 
+/reference:..\pipeline-references\MonoGame.Extended.Content.Pipeline.dll
 
 #---------------------------------- Content ---------------------------------#
 
@@ -49,6 +50,11 @@
 /processorParam:TextureFormat=Color
 /build:Enemies/AngryRedSlime.png
 
+#begin Maps/Level1.tmx
+/importer:TiledMapImporter
+/processor:TiledMapProcessor
+/build:Maps/Level1.tmx
+
 #begin Player/BlackHead.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -60,4 +66,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Player/BlackHead.png
+
+#begin Tilemap.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Tilemap.png
 

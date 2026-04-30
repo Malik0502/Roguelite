@@ -1,10 +1,11 @@
-using System.Collections.Generic;
-using System.Linq;
 using Engine.Core.Components.Collision;
 using Engine.Core.Components.Tags;
 using Engine.Core.Manager.ComponentSystem;
 using Engine.Core.Manager.SpatialGridSystem;
 using Engine.Core.Manager.System;
+using Microsoft.Xna.Framework;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Game.Core.Systems.Collision;
 
@@ -28,9 +29,9 @@ public class RectangleCollisionSystem : ISystem
     }
 
     // Reminder: implement Spatial Partition when game is not stable enough
-    public void Update(float deltaTime)
+    public void Update(GameTime gameTime)
     {
-        ResetCollidingState();
+        ResetCollisionState();
 
         if (!_spatialGrid.TryGetCell(_player, out var cell))
             return;
@@ -50,7 +51,7 @@ public class RectangleCollisionSystem : ISystem
         }
     }
 
-    private void ResetCollidingState()
+    private void ResetCollisionState()
     {
         foreach (var entity in _rectangleColliderPool.GetIds())
         {

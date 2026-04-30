@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Engine.Core.Manager.System;
 
@@ -24,10 +25,10 @@ public class SystemManager
         }
     }
     
-    public void Update(float deltaTime)
+    public void Update(GameTime gameTime)
     {
         foreach (var system in _systems.Values)
-            system.Update(deltaTime);
+            system.Update(gameTime);
     }
 
     public void Draw(SpriteBatch spriteBatch)

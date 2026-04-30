@@ -28,7 +28,7 @@ public class RectangleColliderRenderSystem : IDrawableSystem
         _transformPool = _componentManager.GetPool<Transform>();
     }
 
-    public void Update(float deltaTime)
+    public void Update(GameTime gameTime)
     {
         
     }

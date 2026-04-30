@@ -37,7 +37,7 @@ public class EnemySpawnSystem : ISystem
         _spawnerPool = _componentManager.GetPool<Spawner>();
     }
 
-    public void Update(float deltaTime)
+    public void Update(GameTime gameTime)
     {
         ref var playerSpawner = ref _spawnerPool.Get(_player);
         ref var playerTransform = ref _transformPool.Get(_player);

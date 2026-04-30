@@ -4,6 +4,7 @@ using Engine.Core.Extensions;
 using Engine.Core.Manager.ComponentSystem;
 using Engine.Core.Manager.SceneSystem;
 using Engine.Core.Manager.System;
+using Game.Core.Systems.Content.Tilemap;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -14,17 +15,19 @@ public class RenderSystem : IDrawableSystem
     private readonly ComponentManager _componentManager;
     private readonly SceneManager _sceneManager;
     private readonly GraphicsDevice _graphics;
+    private readonly TilemapRenderSystem _renderSystem;
     private ComponentPool<Sprite> _spritePool;
     private ComponentPool<Transform> _transformPool;
 
     private bool _shouldUpdate;
     public static Matrix SpriteScaleMatrix;
 
-    public RenderSystem(ComponentManager componentManager, SceneManager sceneManager, GraphicsDevice graphics)
+    public RenderSystem(ComponentManager componentManager, SceneManager sceneManager, GraphicsDevice graphics, TilemapRenderSystem renderSystem)
     {
         _componentManager = componentManager;
         _sceneManager = sceneManager;
         _graphics = graphics;
+        _renderSystem = renderSystem;
     }
 
     public void Initialize()
@@ -34,7 +37,7 @@ public class RenderSystem : IDrawableSystem
         _shouldUpdate = true;
     }
 
-    public void Update(float deltaTime)
+    public void Update(GameTime gameTime)
     {
         if (!_shouldUpdate) return;
         UpdateScaleMatrix();
@@ -43,7 +46,7 @@ public class RenderSystem : IDrawableSystem
 
     public void Draw(SpriteBatch spriteBatch)
     {
-        spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: SpriteScaleMatrix);
+        spriteBatch.Begin(samplerState: SamplerState.PointClamp, transformMatrix: _renderSystem.CameraMatrix);
         foreach (var entity in _sceneManager.GetCurrentScene().GetEntities())
         {
             DrawEntity(entity, spriteBatch);
